@@ -1,0 +1,912 @@
+html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Point Punch - Painel de Rankings & Editor</title>
+    <!-- Tailwind CSS para design responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #030008;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .neon-border-purple {
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.5), inset 0 0 10px rgba(147, 51, 234, 0.2);
+        }
+        .neon-text-purple {
+            text-shadow: 0 0 8px rgba(147, 51, 234, 0.8);
+        }
+        .neon-text-green {
+            text-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+        }
+        .neon-text-blue {
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
+        }
+        .neon-text-orange {
+            text-shadow: 0 0 8px rgba(249, 115, 22, 0.8);
+        }
+        .neon-text-red {
+            text-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0614;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9333ea;
+            border-radius: 3px;
+        }
+        .tab-active {
+            border-bottom: 3px solid #a855f7;
+            color: #ffffff;
+            background-color: rgba(147, 51, 234, 0.15);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between pb-8">
+
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="max-w-md mx-auto w-full px-4 flex flex-col items-center">
+        
+        <!-- LOGO DO TOPO (Point Punch) -->
+        <header class="w-full flex justify-center py-4">
+            <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" 
+                 alt="Point Punch Logo" 
+                 class="h-28 object-contain drop-shadow-[0_0_15px_rgba(147,51,234,0.6)]"
+                 onerror="this.src='https://placehold.co/200x100/120024/ffffff?text=POINT+PUNCH'">
+        </header>
+
+        <!-- ABAS DE NAVEGAÇÃO SUPERIOR (Removida no HTML gerado automaticamente para o público) -->
+        <nav id="admin-nav" class="w-full grid grid-cols-2 bg-[#0c0517] rounded-t-xl border-t border-x border-purple-900/60 overflow-hidden mb-4">
+            <button onclick="switchTab('ranking')" id="tab-ranking" class="py-3 text-center font-orbitron font-bold tracking-widest text-sm text-purple-400 hover:text-white transition-all duration-300 tab-active">
+                <i class="fa-solid fa-trophy mr-1.5 text-xs"></i> RANKING
+            </button>
+            <button onclick="switchTab('editor')" id="tab-editor" class="py-3 text-center font-orbitron font-bold tracking-widest text-sm text-purple-400 hover:text-white transition-all duration-300">
+                <i class="fa-solid fa-pen-to-square mr-1.5 text-xs"></i> EDITOR / CADASTRO
+            </button>
+        </nav>
+
+        <!-- SEÇÃO 1: VISUALIZAÇÃO DO RANKING -->
+        <section id="view-ranking" class="w-full space-y-4">
+            <!-- Caixa de Título "Rankings" -->
+            <div class="w-full bg-purple-900 bg-opacity-20 border-2 border-purple-600 rounded-lg py-2 px-6 text-center neon-border-purple">
+                <h1 class="text-2xl font-black tracking-widest text-white font-orbitron neon-text-purple uppercase">Rankings</h1>
+            </div>
+
+            <!-- Botões de Categorias (Geral, Fatality, Punch, Folhinhas, Batalhas) -->
+            <div class="grid grid-cols-5 gap-1 w-full">
+                <button onclick="switchCategory('geral')" id="btn-geral" class="category-btn py-2 px-1 text-[10px] font-bold rounded uppercase tracking-wider text-center border border-purple-500 bg-purple-600 text-white transition-all duration-300 shadow-[0_0_8px_rgba(147,51,234,0.5)]">
+                    Geral
+                </button>
+                <button onclick="switchCategory('fatality')" id="btn-fatality" class="category-btn py-2 px-1 text-[10px] font-bold rounded uppercase tracking-wider text-center border border-orange-500 bg-transparent text-orange-400 hover:bg-orange-600 hover:text-white transition-all duration-300">
+                    Fatality
+                </button>
+                <button onclick="switchCategory('punch')" id="btn-punch" class="category-btn py-2 px-1 text-[10px] font-bold rounded uppercase tracking-wider text-center border border-cyan-500 bg-transparent text-cyan-400 hover:bg-cyan-600 hover:text-white transition-all duration-300">
+                    Punch
+                </button>
+                <button onclick="switchCategory('folhinhas')" id="btn-folhinhas" class="category-btn py-2 px-1 text-[10px] font-bold rounded uppercase tracking-wider text-center border border-red-500 bg-transparent text-red-400 hover:bg-red-600 hover:text-white transition-all duration-300">
+                    Folhinhas
+                </button>
+                <button onclick="switchCategory('batalhas')" id="btn-batalhas" class="category-btn py-2 px-1 text-[10px] font-bold rounded uppercase tracking-wider text-center border border-green-500 bg-transparent text-green-400 hover:bg-green-600 hover:text-white transition-all duration-300">
+                    Batalhas
+                </button>
+            </div>
+
+            <!-- Bloco do Modo Ranqueado (Banner Geral) -->
+            <div class="relative w-full rounded-xl overflow-hidden border-2 border-purple-900 neon-border-purple h-36 flex items-end">
+                <img id="category-banner-bg" src="https://i.postimg.cc/jd88McfN/file-00000000da6871f59ec38f7a5ab2ef46-2.jpg" 
+                     alt="Modo Ranqueado" 
+                     class="absolute inset-0 w-full h-full object-cover opacity-85"
+                     onerror="this.src='https://placehold.co/400x150/200030/ffffff?text=MODO+RANQUEADO'">
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-purple-950/30"></div>
+                
+                <div class="relative z-10 w-full text-center pb-3">
+                    <h2 class="text-xl font-black font-orbitron tracking-widest text-white uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                        MODO RANQUEADO
+                    </h2>
+                    <p id="current-category-indicator" class="text-[10px] text-purple-300 font-bold uppercase tracking-widest mt-0.5">
+                        Exibindo Classificação: Geral
+                    </p>
+                </div>
+            </div>
+
+            <!-- TABELA DO RANKING -->
+            <div class="w-full bg-[#0a0512]/90 rounded-xl border border-purple-900/60 overflow-hidden shadow-2xl">
+                <!-- Cabeçalho da Tabela -->
+                <div class="grid grid-cols-12 gap-1 px-4 py-3 bg-[#11091e] border-b border-purple-900/40 text-[9px] font-bold tracking-widest text-purple-300 uppercase text-center items-center">
+                    <div class="col-span-1 text-left">#</div>
+                    <div class="col-span-4 text-left">MC</div>
+                    <div class="col-span-2">V (D)</div>
+                    <div class="col-span-1.5 text-orange-400">FAT</div>
+                    <div class="col-span-1.5 text-cyan-400">PUN</div>
+                    <div class="col-span-1 text-red-400">FOL</div>
+                    <div class="col-span-1 text-green-400 text-right">PTS</div>
+                </div>
+
+                <!-- Lista de Classificação Dinâmica -->
+                <div id="ranking-list" class="divide-y divide-purple-950/40 max-h-[350px] overflow-y-auto">
+                    <!-- Preenchido por JS -->
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SEÇÃO 2: DETALHES DO PERFIL INDIVIDUAL DO JOGADOR -->
+        <section id="view-profile" class="w-full space-y-5 hidden">
+            <!-- Cabeçalho do Perfil -->
+            <div class="relative w-full rounded-2xl overflow-hidden border-2 border-purple-500 bg-gradient-to-r from-cyan-950/60 via-purple-950/50 to-blue-950/60 p-4 neon-border-purple">
+                
+                <!-- Rank Badge -->
+                <div class="absolute top-2 right-2 bg-gradient-to-b from-purple-500 to-indigo-700 border border-purple-300 text-white font-orbitron font-extrabold text-center rounded-lg px-2 py-1 shadow-lg flex flex-col justify-center items-center min-w-[50px]">
+                    <span class="text-[8px] uppercase tracking-wider">RANK</span>
+                    <span id="profile-rank-badge" class="text-base leading-none">#1</span>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <img id="profile-avatar" src="" alt="Avatar" class="w-16 h-16 rounded-full object-cover border-4 border-cyan-400 shadow-md">
+                        <div class="absolute -bottom-1 -right-1 bg-yellow-500 text-black rounded-full p-1 border-2 border-black flex items-center justify-center w-5 h-5">
+                            <i class="fa-solid fa-microphone text-[8px]"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span id="profile-real-name" class="text-green-400 font-bold text-xs tracking-wide block">Nome do Jogador</span>
+                        <h2 id="profile-nickname" class="text-2xl font-black font-orbitron text-white tracking-wider leading-none uppercase">MC NOME</h2>
+                    </div>
+                </div>
+
+                <!-- Info Rodada -->
+                <div class="mt-4 flex items-center gap-3 bg-black/50 rounded-lg p-2 border border-purple-500/20">
+                    <div class="bg-yellow-500/10 p-1.5 rounded border border-yellow-500/25">
+                        <i class="fa-solid fa-trophy text-yellow-500 text-xs"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[8px] text-gray-400 uppercase tracking-widest">Batalha de Origem</p>
+                        <p id="profile-battle-origin" class="text-xs font-bold text-white uppercase">BATALHAS DO K9</p>
+                    </div>
+                    <div class="bg-purple-950/80 px-2.5 py-0.5 rounded text-right border border-purple-500/30">
+                        <p class="text-[7px] text-purple-300 uppercase leading-none">Pontos</p>
+                        <p id="profile-points" class="text-sm font-extrabold text-green-400 font-orbitron">120</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard de Estatísticas -->
+            <div class="w-full bg-[#07030e] rounded-2xl border border-purple-900/60 p-4 space-y-4">
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    
+                    <div class="bg-[#100922] p-3 rounded-xl border border-blue-900/40 flex flex-col items-center justify-center">
+                        <span id="profile-stat-regular" class="text-3xl font-extrabold text-blue-400 font-orbitron">190</span>
+                        <div class="mt-1.5 bg-blue-600 text-white font-black text-[9px] px-2.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+                            REGULAR <span class="w-2 h-2 rounded-full bg-blue-300 block"></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#100922] p-3 rounded-xl border border-purple-900/40 flex flex-col items-center justify-center">
+                        <span id="profile-stat-punch" class="text-3xl font-extrabold text-purple-400 font-orbitron">57</span>
+                        <div class="mt-1.5 bg-purple-600 text-white font-black text-[9px] px-2.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+                            PUNCH <span class="w-2 h-2 rounded-full bg-purple-300 block"></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#100922] p-3 rounded-xl border border-orange-950/40 flex flex-col items-center justify-center">
+                        <span id="profile-stat-fatality" class="text-3xl font-extrabold text-orange-400 font-orbitron">16</span>
+                        <div class="mt-1.5 bg-orange-500 text-white font-black text-[9px] px-2.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+                            FATALITY <span class="w-2 h-2 rounded-full bg-orange-300 block"></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#100922] p-3 rounded-xl border border-red-950/40 flex flex-col items-center justify-center">
+                        <span id="profile-stat-folhinhas" class="text-3xl font-extrabold text-red-500 font-orbitron">06</span>
+                        <div class="mt-1.5 bg-red-600 text-white font-black text-[9px] px-2.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+                            FOLHINHAS <span class="w-2 h-2 rounded-full bg-red-300 block"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Detalhes de vitórias e derrotas -->
+                <div class="bg-black/40 rounded-xl p-3 border border-purple-500/10 flex justify-between items-center text-center text-xs">
+                    <div class="flex-1">
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">Vitórias</p>
+                        <p id="profile-detail-v" class="text-sm font-bold text-green-400">0</p>
+                    </div>
+                    <div class="h-6 w-[1px] bg-purple-950"></div>
+                    <div class="flex-1">
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">Derrotas</p>
+                        <p id="profile-detail-d" class="text-sm font-bold text-red-400">0</p>
+                    </div>
+                    <div class="h-6 w-[1px] bg-purple-950"></div>
+                    <div class="flex-1">
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">Win Rate</p>
+                        <p id="profile-detail-winrate" class="text-sm font-bold text-cyan-400">0%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão Voltar -->
+            <button onclick="goBackToRankings()" class="w-full bg-[#0c0517] hover:bg-purple-950 text-purple-300 hover:text-white font-bold py-3 px-6 rounded-xl border border-purple-500/20 transition-all duration-300 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-chevron-left"></i> Voltar para os rankings
+            </button>
+        </section>
+
+
+        <!-- SEÇÃO 3: EDITOR / GESTÃO DE JOGADORES (Aba Separada - Removida no download do site público) -->
+        <section id="view-editor" class="w-full space-y-4 hidden">
+            
+            <div class="w-full bg-[#07030e] border border-purple-900 rounded-xl p-4 shadow-2xl space-y-4">
+                <div class="flex justify-between items-center border-b border-purple-950 pb-2">
+                    <h3 class="text-lg font-bold font-orbitron tracking-wider text-purple-300 uppercase">Editor de Notas</h3>
+                    <span class="text-[10px] bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded font-mono font-bold">CÁLCULO AUTO</span>
+                </div>
+
+                <!-- Formulário -->
+                <form id="mc-form" onsubmit="saveMc(event)" class="space-y-3">
+                    <input type="hidden" id="form-mc-id">
+                    
+                    <div>
+                        <label class="block text-[10px] font-bold text-purple-300 uppercase tracking-wider mb-0.5">Nome do MC (Vulgo)*</label>
+                        <input type="text" id="form-mc-nickname" required class="w-full bg-[#0d071a] border border-purple-900 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Ex: Jotapê">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-purple-300 uppercase tracking-wider mb-0.5">Nome Real</label>
+                            <input type="text" id="form-mc-realname" class="w-full bg-[#0d071a] border border-purple-900 rounded px-3 py-1.5 text-sm text-white focus:outline-none" placeholder="Ex: João Pedro">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-purple-300 uppercase tracking-wider mb-0.5">Batalha de Origem</label>
+                            <input type="text" id="form-mc-battle" class="w-full bg-[#0d071a] border border-purple-900 rounded px-3 py-1.5 text-sm text-white focus:outline-none" placeholder="Ex: BATALHAS DO K9">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-purple-300 uppercase tracking-wider mb-0.5">URL da Foto do MC</label>
+                        <input type="url" id="form-mc-photo" class="w-full bg-[#0d071a] border border-purple-900 rounded px-3 py-1.5 text-xs text-white focus:outline-none" placeholder="Deixe em branco para usar imagem padrão">
+                    </div>
+
+                    <!-- Campos Numéricos com Cálculo Automático de Pontos -->
+                    <div class="grid grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-[9px] font-bold text-blue-400 uppercase tracking-wider mb-0.5 text-center">Vitórias</label>
+                            <input type="number" id="form-mc-wins" min="0" required class="w-full bg-[#0d071a] border border-purple-900 rounded py-1 text-center text-sm text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-red-400 uppercase tracking-wider mb-0.5 text-center">Derrotas</label>
+                            <input type="number" id="form-mc-losses" min="0" required class="w-full bg-[#0d071a] border border-purple-900 rounded py-1 text-center text-sm text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-orange-400 uppercase tracking-wider mb-0.5 text-center">Fatality</label>
+                            <input type="number" id="form-mc-fatality" min="0" required class="w-full bg-[#0d071a] border border-purple-900 rounded py-1 text-center text-sm text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-cyan-400 uppercase tracking-wider mb-0.5 text-center">Punch</label>
+                            <input type="number" id="form-mc-punch" min="0" required class="w-full bg-[#0d071a] border border-purple-900 rounded py-1 text-center text-sm text-white focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Seção com Folhinhas, Regular e Pontos Globais -->
+                    <div class="grid grid-cols-3 gap-2 items-center pt-1">
+                        <div>
+                            <label class="block text-[10px] font-bold text-red-500 uppercase tracking-wider mb-0.5 text-center">Folhinhas</label>
+                            <input type="number" id="form-mc-folhinhas" min="0" required class="w-full bg-[#0d071a] border border-purple-900 rounded py-1.5 text-center text-sm text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-0.5 text-center">Regular</label>
+                            <input type="number" id="form-mc-regular" min="0" required class="w-full bg-[#0d071a] border border-purple-900 rounded py-1.5 text-center text-sm text-white focus:outline-none" placeholder="0">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-yellow-500 uppercase tracking-wider mb-0.5 text-center">Global</label>
+                            <div class="relative">
+                                <input type="text" id="form-mc-points-preview" disabled class="w-full bg-purple-950/30 border border-purple-500/40 rounded py-1.5 text-center text-sm text-green-400 font-bold font-orbitron" placeholder="Calc">
+                                <span class="absolute top-0.5 right-1 text-[7px] text-purple-300 font-mono font-bold">AUTO</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botão Salvar MC do formulário -->
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 border border-purple-500/30 transition-all duration-300 shadow-md">
+                        <i class="fa-solid fa-floppy-disk"></i> Salvar & Atualizar MC
+                    </button>
+                </form>
+
+                <!-- Área Administrativa de MCs já salvos -->
+                <div class="border-t border-purple-950 pt-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-[11px] font-bold text-purple-300 uppercase tracking-widest">MCs Cadastrados</h4>
+                        <span id="mcs-count" class="text-[9px] bg-purple-900/30 text-purple-300 px-2 py-0.5 rounded border border-purple-800/40 font-mono">0 MCs</span>
+                    </div>
+                    <div id="editor-mc-list" class="space-y-1.5 max-h-[180px] overflow-y-auto pr-1">
+                        <!-- Gerado dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- Botões de Ação para o Administrador -->
+                <div id="admin-actions-block" class="border-t border-purple-950 pt-3 space-y-2">
+                    <!-- Botão 1: Salvar Temporário/Local -->
+                    <button onclick="saveAllToLocalStorage()" class="w-full bg-green-700 hover:bg-green-600 text-white font-black py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(34,197,94,0.3)] border border-green-500/50 transition-all duration-300 text-sm">
+                        <i class="fa-solid fa-hard-drive"></i> SALVAR NO NAVEGADOR
+                    </button>
+                    
+                    <!-- Botão 2: GERAR E BAIXAR HTML ATUALIZADO -->
+                    <button onclick="generateUpdatedHTML()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-black py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.4)] border border-cyan-400/50 transition-all duration-300">
+                        <i class="fa-solid fa-file-code"></i> BAIXAR HTML DO RANKING
+                    </button>
+                    
+                    <p class="text-[9px] text-gray-500 text-center leading-tight">Ao clicar no botão azul, um arquivo HTML limpo será baixado. Esse arquivo conterá apenas o Ranking e Perfil dos Jogadores, ocultando a tela de edição do público final!</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- NOTIFICAÇÃO TOAST -->
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-purple-900 border border-purple-500 text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-50">
+        Operação concluída!
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="w-full text-center mt-4 text-gray-600 text-[10px] tracking-wider uppercase font-orbitron">
+        Point Punch © 2026 - Modo Ranqueado
+    </footer>
+
+    <!-- LÓGICA DO SISTEMA -->
+    <script>
+        // --- INICIO DADOS --- (MARCAÇÃO IMPORTANTE PARA EXPORTAÇÃO)
+        const defaultMcs = [
+            {
+                "id": "mc-1",
+                "nickname": "Jotapê",
+                "realName": "João Pedro",
+                "battleOrigin": "BATALHAS DO K9",
+                "avatar": "https://i.postimg.cc/jd88McfN/file-00000000da6871f59ec38f7a5ab2ef46-2.jpg",
+                "wins": 15,
+                "losses": 2,
+                "fatality": 38,
+                "punch": 14,
+                "folhinhas": 5,
+                "regular": 190,
+                "points": 207
+            },
+            {
+                "id": "mc-2",
+                "nickname": "BMO",
+                "realName": "Breno",
+                "battleOrigin": "BATALHA DA ALDEIA",
+                "avatar": "https://i.postimg.cc/jd88McfN/file-00000000da6871f59ec38f7a5ab2ef46-2.jpg",
+                "wins": 12,
+                "losses": 5,
+                "fatality": 42,
+                "punch": 20,
+                "folhinhas": 8,
+                "regular": 150,
+                "points": 190
+            },
+            {
+                "id": "mc-3",
+                "nickname": "MC Referência",
+                "realName": "Referência",
+                "battleOrigin": "BATALHA DOS ANJOS",
+                "avatar": "https://i.postimg.cc/jd88McfN/file-00000000da6871f59ec38f7a5ab2ef46-2.jpg",
+                "wins": 17,
+                "losses": 0,
+                "fatality": 50,
+                "punch": 7,
+                "folhinhas": 16,
+                "regular": 240,
+                "points": 243
+            },
+            {
+                "id": "mc-4",
+                "nickname": "Kant",
+                "realName": "Arthur Kant",
+                "battleOrigin": "BATALHAS DO K9",
+                "avatar": "https://i.postimg.cc/jd88McfN/file-00000000da6871f59ec38f7a5ab2ef46-2.jpg",
+                "wins": 14,
+                "losses": 3,
+                "fatality": 45,
+                "punch": 10,
+                "folhinhas": 12,
+                "regular": 180,
+                "points": 207
+            },
+            {
+                "id": "mc-5",
+                "nickname": "Guri",
+                "realName": "Gustavo",
+                "battleOrigin": "BATALHA DE DEUS",
+                "avatar": "https://i.postimg.cc/jd88McfN/file-00000000da6871f59ec38f7a5ab2ef46-2.jpg",
+                "wins": 11,
+                "losses": 6,
+                "fatality": 30,
+                "punch": 15,
+                "folhinhas": 4,
+                "regular": 130,
+                "points": 159
+            },
+            {
+                "id": "mc-6",
+                "nickname": "Krawk",
+                "realName": "Wallysson",
+                "battleOrigin": "BATALHAS DO K9",
+                "avatar": "https://i.postimg.cc/jd88McfN/file-00000000da6871f59ec38f7a5ab2ef46-2.jpg",
+                "wins": 10,
+                "losses": 7,
+                "fatality": 35,
+                "punch": 9,
+                "folhinhas": 10,
+                "regular": 120,
+                "points": 154
+            }
+        ];
+        // --- FIM DADOS ---
+
+        // Estado ativo da aplicação
+        let mcsData = [];
+        let currentCategory = 'geral';
+        let activeTab = 'ranking';
+
+        // Inicialização
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAllFromLocalStorage();
+            setupFormListeners();
+            renderRankings();
+            renderEditorMcList();
+        });
+
+        // Carrega os dados persistidos ou usa os iniciais caso não existam
+        function loadAllFromLocalStorage() {
+            const savedData = localStorage.getItem('point_punch_mcs');
+            if (savedData) {
+                try {
+                    let parsedData = JSON.parse(savedData);
+                    
+                    mcsData = parsedData.map(mc => {
+                        if (mc.punishment !== undefined) {
+                            mc.folhinhas = mc.punishment;
+                            delete mc.punishment;
+                        }
+                        // Garante que o campo regular exista
+                        if (mc.regular === undefined) {
+                            mc.regular = 0;
+                        }
+                        mc.points = (mc.wins * 10) + mc.fatality + mc.punch + mc.folhinhas;
+                        return mc;
+                    });
+                    
+                } catch(e) {
+                    mcsData = [...defaultMcs];
+                }
+            } else {
+                mcsData = [...defaultMcs];
+                saveToLocalStorageDirectly();
+            }
+        }
+
+        // Grava no localStorage local
+        function saveToLocalStorageDirectly() {
+            localStorage.setItem('point_punch_mcs', JSON.stringify(mcsData));
+        }
+
+        // Botão dedicado para Salvar Toda Operação no Navegador
+        function saveAllToLocalStorage() {
+            saveToLocalStorageDirectly();
+            showToast("Dados salvos no seu navegador com sucesso!");
+            renderRankings();
+            renderEditorMcList();
+        }
+
+        // Função que gera e faz o Download do Arquivo HTML Limpo (Sem Editor e Sem Nav)
+        function generateUpdatedHTML() {
+            // 1. Clona o documento HTML atual na memória
+            let docClone = document.documentElement.cloneNode(true);
+            
+            // 2. Limpeza do painel de administração e navegação
+            let adminNav = docClone.querySelector('#admin-nav');
+            if (adminNav) adminNav.remove(); // Remove as abas de navegação
+            
+            let editorSection = docClone.querySelector('#view-editor');
+            if (editorSection) editorSection.remove(); // Remove o editor completamente
+
+            // Força a exibição da aba de ranking padrão
+            let rankingView = docClone.querySelector('#view-ranking');
+            if (rankingView) rankingView.classList.remove('hidden');
+
+            let profileView = docClone.querySelector('#view-profile');
+            if (profileView) profileView.classList.add('hidden');
+
+            // Limpa as listas dinâmicas geradas para manter o arquivo limpo
+            docClone.querySelector('#ranking-list').innerHTML = '';
+            
+            // 3. Modifica os dados locais no script para salvar as suas alterações definitivas
+            let scripts = docClone.querySelectorAll('script');
+            scripts.forEach(script => {
+                if (script.innerHTML.includes('// --- INICIO DADOS ---')) {
+                    const stringDadosInjetados = JSON.stringify(mcsData, null, 12);
+                    script.innerHTML = script.innerHTML.replace(
+                        /\/\/ --- INICIO DADOS ---[\s\S]*?\/\/ --- FIM DADOS ---/,
+                        `// --- INICIO DADOS ---\n        const defaultMcs = ${stringDadosInjetados};\n        // --- FIM DADOS ---`
+                    );
+                }
+            });
+
+            // 4. Cria e força o download do arquivo HTML final
+            let finalHTML = "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n" + docClone.innerHTML + "\n</html>";
+            
+            let blob = new Blob([finalHTML], { type: 'text/html;charset=utf-8' });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html'; // Prontinho para o seu site
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast("HTML limpo gerado e baixado!");
+        }
+
+        // Configura ouvintes de alteração para cálculo em tempo real
+        function setupFormListeners() {
+            const inputs = ['form-mc-wins', 'form-mc-fatality', 'form-mc-punch', 'form-mc-folhinhas'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calculatePointsAuto);
+            });
+        }
+
+        // Realiza o cálculo automático de pontos com base na fórmula
+        function calculatePointsAuto() {
+            const wins = parseInt(document.getElementById('form-mc-wins').value) || 0;
+            const fatality = parseInt(document.getElementById('form-mc-fatality').value) || 0;
+            const punch = parseInt(document.getElementById('form-mc-punch').value) || 0;
+            const folhinhas = parseInt(document.getElementById('form-mc-folhinhas').value) || 0;
+
+            const computedPoints = (wins * 10) + fatality + punch + folhinhas;
+            document.getElementById('form-mc-points-preview').value = computedPoints;
+        }
+
+        // Alternador de abas superiores (RANKING x EDITOR)
+        function switchTab(tab) {
+            activeTab = tab;
+            
+            // Só executa se o painel administrativo estiver visível
+            const nav = document.getElementById('admin-nav');
+            if (!nav) return;
+
+            document.getElementById('tab-ranking').classList.toggle('tab-active', tab === 'ranking');
+            document.getElementById('tab-editor').classList.toggle('tab-active', tab === 'editor');
+
+            if (tab === 'ranking') {
+                document.getElementById('view-ranking').classList.remove('hidden');
+                document.getElementById('view-editor').classList.add('hidden');
+                document.getElementById('view-profile').classList.add('hidden');
+                renderRankings();
+            } else {
+                document.getElementById('view-editor').classList.remove('hidden');
+                document.getElementById('view-ranking').classList.add('hidden');
+                document.getElementById('view-profile').classList.add('hidden');
+                renderEditorMcList();
+                resetForm();
+            }
+        }
+
+        // Seleção de categorias do Ranking
+        function switchCategory(category) {
+            currentCategory = category;
+
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.className = btn.className
+                    .replace('bg-purple-600 text-white border-purple-500 shadow-[0_0_8px_rgba(147,51,234,0.5)]', 'bg-transparent border-purple-500/50')
+                    .replace('bg-orange-600 text-white shadow-[0_0_8px_rgba(249,115,22,0.5)]', 'bg-transparent border-orange-500/50')
+                    .replace('bg-cyan-600 text-white shadow-[0_0_8px_rgba(6,182,212,0.5)]', 'bg-transparent border-cyan-500/50')
+                    .replace('bg-red-600 text-white shadow-[0_0_8px_rgba(239,68,68,0.5)]', 'bg-transparent border-red-500/50')
+                    .replace('bg-green-600 text-white shadow-[0_0_8px_rgba(34,197,94,0.5)]', 'bg-transparent border-green-500/50');
+            });
+
+            const currentBtn = document.getElementById(`btn-${category}`);
+            let colorClass = "";
+            let categoryText = "Geral";
+
+            switch (category) {
+                case 'geral':
+                    colorClass = "bg-purple-600 text-white border-purple-500 shadow-[0_0_8px_rgba(147,51,234,0.5)]";
+                    categoryText = "Geral";
+                    break;
+                case 'fatality':
+                    colorClass = "bg-orange-600 text-white border-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]";
+                    categoryText = "Fatality";
+                    break;
+                case 'punch':
+                    colorClass = "bg-cyan-600 text-white border-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.5)]";
+                    categoryText = "Punch";
+                    break;
+                case 'folhinhas':
+                    colorClass = "bg-red-600 text-white border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]";
+                    categoryText = "Folhinhas";
+                    break;
+                case 'batalhas':
+                    colorClass = "bg-green-600 text-white border-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]";
+                    categoryText = "Batalhas";
+                    break;
+            }
+
+            if (currentBtn) {
+                currentBtn.className = currentBtn.className.replace('bg-transparent', '').trim();
+                currentBtn.classList.add(...colorClass.split(" "));
+            }
+
+            document.getElementById('current-category-indicator').innerText = `Exibindo Classificação: ${categoryText}`;
+            renderRankings();
+        }
+
+        // Renderiza a tabela do Ranking
+        function renderRankings() {
+            const listContainer = document.getElementById('ranking-list');
+            listContainer.innerHTML = '';
+
+            let sortedMcs = [...mcsData];
+
+            if (currentCategory === 'geral') {
+                sortedMcs.sort((a, b) => b.points - a.points);
+            } else if (currentCategory === 'fatality') {
+                sortedMcs.sort((a, b) => b.fatality - a.fatality);
+            } else if (currentCategory === 'punch') {
+                sortedMcs.sort((a, b) => b.punch - a.punch);
+            } else if (currentCategory === 'folhinhas') {
+                sortedMcs.sort((a, b) => b.folhinhas - a.folhinhas);
+            } else if (currentCategory === 'batalhas') {
+                sortedMcs.sort((a, b) => b.wins - a.wins);
+            }
+
+            sortedMcs.forEach((mc, index) => {
+                const isTop1 = index === 0;
+                const indexClass = isTop1 ? 'text-yellow-400 font-black font-orbitron text-sm' : 'text-purple-300 font-bold';
+                
+                let finalScoreDisplay = mc.points;
+                let finalScoreColorClass = 'text-green-400 neon-text-green';
+
+                if (currentCategory === 'fatality') {
+                    finalScoreColorClass = 'text-orange-400 neon-text-orange';
+                } else if (currentCategory === 'punch') {
+                    finalScoreColorClass = 'text-cyan-400 neon-text-blue';
+                } else if (currentCategory === 'folhinhas') {
+                    finalScoreColorClass = 'text-red-400 neon-text-red';
+                    finalScoreDisplay = mc.folhinhas;
+                } else if (currentCategory === 'batalhas') {
+                    finalScoreColorClass = 'text-green-400 neon-text-green';
+                }
+
+                const itemRow = document.createElement('div');
+                itemRow.className = `grid grid-cols-12 gap-1 px-4 py-3 items-center hover:bg-purple-900/20 cursor-pointer transition-all duration-200 border-l-2 ${isTop1 ? 'border-yellow-500 bg-yellow-500/5' : 'border-transparent'}`;
+                itemRow.onclick = () => openMcProfile(mc.id);
+
+                itemRow.innerHTML = `
+                    <div class="col-span-1 text-center ${indexClass}">${index + 1}</div>
+                    <div class="col-span-4 flex items-center gap-2">
+                        <img src="${mc.avatar}" alt="${mc.nickname}" class="w-7 h-7 rounded-full object-cover border border-purple-500/50" onerror="this.src='https://placehold.co/40x40/1a002c/ffffff?text=${mc.nickname.substring(0,2)}'">
+                        <span class="font-bold text-white text-xs truncate">${mc.nickname}</span>
+                    </div>
+                    <div class="col-span-2 text-[10px] text-center text-gray-400">
+                        ${mc.wins} <span class="text-[8px] text-gray-500">(${mc.losses})</span>
+                    </div>
+                    <div class="col-span-1.5 text-center text-xs ${currentCategory === 'fatality' ? 'font-black text-orange-400' : 'text-gray-400'}">${mc.fatality}</div>
+                    <div class="col-span-1.5 text-center text-xs ${currentCategory === 'punch' ? 'font-black text-cyan-400' : 'text-gray-400'}">${mc.punch}</div>
+                    <div class="col-span-1 text-center text-xs ${currentCategory === 'folhinhas' ? 'font-black text-red-500' : 'text-gray-500'}">${mc.folhinhas}</div>
+                    <div class="col-span-1 text-right font-black font-orbitron text-xs ${finalScoreColorClass}">${finalScoreDisplay}</div>
+                `;
+
+                listContainer.appendChild(itemRow);
+            });
+        }
+
+        // Abre o Perfil do MC (VISTA 2)
+        function openMcProfile(mcId) {
+            const mc = mcsData.find(item => item.id === mcId);
+            if (!mc) return;
+
+            const sorted = [...mcsData].sort((a,b) => b.points - a.points);
+            const rankPos = sorted.findIndex(item => item.id === mcId) + 1;
+
+            document.getElementById('profile-rank-badge').innerText = `#${rankPos}`;
+            document.getElementById('profile-avatar').src = mc.avatar;
+            document.getElementById('profile-avatar').onerror = function() {
+                this.src = "https://placehold.co/100x100/120024/ffffff?text=" + mc.nickname.substring(0,2);
+            };
+            document.getElementById('profile-real-name').innerText = mc.realName || "MC Oficial";
+            document.getElementById('profile-nickname').innerText = mc.nickname;
+            document.getElementById('profile-battle-origin').innerText = mc.battleOrigin || "BATALHAS DO K9";
+            document.getElementById('profile-points').innerText = mc.points;
+
+            // Define o valor do regular diretamente do campo que você configurou no editor
+            document.getElementById('profile-stat-regular').innerText = mc.regular || 0;
+            
+            document.getElementById('profile-stat-punch').innerText = mc.punch;
+            document.getElementById('profile-stat-fatality').innerText = mc.fatality;
+            document.getElementById('profile-stat-folhinhas').innerText = String(mc.folhinhas).padStart(2, '0');
+
+            document.getElementById('profile-detail-v').innerText = mc.wins;
+            document.getElementById('profile-detail-d').innerText = mc.losses;
+
+            const total = mc.wins + mc.losses;
+            const wr = total > 0 ? ((mc.wins / total) * 100).toFixed(1) : "100.0";
+            document.getElementById('profile-detail-winrate').innerText = `${wr}%`;
+
+            document.getElementById('view-ranking').classList.add('hidden');
+            
+            // Oculta editor de forma segura caso exista no DOM
+            const editorView = document.getElementById('view-editor');
+            if (editorView) editorView.classList.add('hidden');
+            
+            document.getElementById('view-profile').classList.remove('hidden');
+        }
+
+        function goBackToRankings() {
+            document.getElementById('view-profile').classList.add('hidden');
+            document.getElementById('view-ranking').classList.remove('hidden');
+            renderRankings();
+        }
+
+        // Salvar MC via Formulário
+        function saveMc(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('form-mc-id').value;
+            const nickname = document.getElementById('form-mc-nickname').value.trim();
+            const realName = document.getElementById('form-mc-realname').value.trim() || "MC Oficial";
+            const battleOrigin = document.getElementById('form-mc-battle').value.trim() || "BATALHAS DO K9";
+            
+            let avatar = document.getElementById('form-mc-photo').value.trim();
+            if (!avatar) {
+                avatar = "https://i.postimg.cc/jd88McfN/file-00000000da6871f59ec38f7a5ab2ef46-2.jpg";
+            }
+
+            const wins = parseInt(document.getElementById('form-mc-wins').value) || 0;
+            const losses = parseInt(document.getElementById('form-mc-losses').value) || 0;
+            const fatality = parseInt(document.getElementById('form-mc-fatality').value) || 0;
+            const punch = parseInt(document.getElementById('form-mc-punch').value) || 0;
+            const folhinhas = parseInt(document.getElementById('form-mc-folhinhas').value) || 0;
+            const regular = parseInt(document.getElementById('form-mc-regular').value) || 0;
+
+            const points = (wins * 10) + fatality + punch + folhinhas;
+
+            if (id) {
+                const index = mcsData.findIndex(item => item.id === id);
+                if (index !== -1) {
+                    mcsData[index] = {
+                        id, nickname, realName, battleOrigin, avatar, wins, losses, fatality, punch, folhinhas, regular, points
+                    };
+                    showToast(`Dados de ${nickname} alterados!`);
+                }
+            } else {
+                const newId = `mc-${Date.now()}`;
+                mcsData.push({
+                    id: newId, nickname, realName, battleOrigin, avatar, wins, losses, fatality, punch, folhinhas, regular, points
+                });
+                showToast(`MC ${nickname} adicionado com sucesso!`);
+            }
+
+            saveToLocalStorageDirectly();
+
+            resetForm();
+            renderEditorMcList();
+            renderRankings();
+            
+            setTimeout(() => {
+                switchTab('ranking');
+            }, 500);
+        }
+
+        // Renderiza lista de MCs no painel editor para alteração rápida
+        function renderEditorMcList() {
+            const container = document.getElementById('editor-mc-list');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            document.getElementById('mcs-count').innerText = `${mcsData.length} MCs`;
+
+            mcsData.forEach(mc => {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-[#0d071a] border border-purple-900/60 p-2 rounded text-xs";
+                item.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <img src="${mc.avatar}" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://placehold.co/30x30/1a002c/ffffff?text=${mc.nickname.substring(0,2)}'">
+                        <span class="font-bold text-white">${mc.nickname} <span class="text-[9px] text-gray-400">(${mc.points} pts)</span></span>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <button onclick="editMc('${mc.id}')" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] px-2 py-1 rounded">
+                            <i class="fa-solid fa-pen-to-square"></i> Editar
+                        </button>
+                        <button onclick="deleteMc('${mc.id}')" type="button" class="bg-red-950/40 hover:bg-red-600 text-red-400 hover:text-white text-[10px] px-2 py-1 rounded border border-red-500/20">
+                            <i class="fa-solid fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Preenche formulário para edição
+        function editMc(id) {
+            const mc = mcsData.find(item => item.id === id);
+            if (!mc) return;
+
+            document.getElementById('form-mc-id').value = mc.id;
+            document.getElementById('form-mc-nickname').value = mc.nickname;
+            document.getElementById('form-mc-realname').value = mc.realName || '';
+            document.getElementById('form-mc-battle').value = mc.battleOrigin || '';
+            document.getElementById('form-mc-photo').value = mc.avatar;
+            document.getElementById('form-mc-wins').value = mc.wins;
+            document.getElementById('form-mc-losses').value = mc.losses;
+            document.getElementById('form-mc-fatality').value = mc.fatality;
+            document.getElementById('form-mc-punch').value = mc.punch;
+            document.getElementById('form-mc-folhinhas').value = mc.folhinhas;
+            document.getElementById('form-mc-regular').value = mc.regular || 0;
+            
+            calculatePointsAuto();
+            showToast(`Dados de ${mc.nickname} carregados no formulário.`);
+            
+            document.getElementById('mc-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Remove um MC definitivamente do localStorage
+        function deleteMc(id) {
+            const mc = mcsData.find(item => item.id === id);
+            if (!mc) return;
+
+            if (confirm(`Remover MC ${mc.nickname} definitivamente de todos os registros?`)) {
+                mcsData = mcsData.filter(item => item.id !== id);
+                saveToLocalStorageDirectly();
+                renderEditorMcList();
+                renderRankings();
+                showToast(`${mc.nickname} removido.`);
+                resetForm();
+            }
+        }
+
+        // Limpa formulário
+        function resetForm() {
+            document.getElementById('form-mc-id').value = '';
+            document.getElementById('mc-form').reset();
+            document.getElementById('form-mc-wins').value = 0;
+            document.getElementById('form-mc-losses').value = 0;
+            document.getElementById('form-mc-fatality').value = 0;
+            document.getElementById('form-mc-punch').value = 0;
+            document.getElementById('form-mc-folhinhas').value = 0;
+            document.getElementById('form-mc-regular').value = 0;
+            document.getElementById('form-mc-points-preview').value = '0';
+        }
+
+        // Toast de Operação
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.opacity = '1';
+            toast.style.pointerEvents = 'auto';
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.pointerEvents = 'none';
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
+
+

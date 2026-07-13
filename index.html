@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Point Punch - Seja Bem Vindo</title>
+    
+    <!-- Importando Tailwind CSS para estilização rápida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Importando fonte similar (Montserrat) garantindo funcionamento universal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Variáveis de Cores Neon */
+        :root {
+            --neon-purple: #7000FF;
+            --neon-green: #00FF55;
+            --bg-color: #030305;
+        }
+
+        body {
+            font-family: 'Montserrat', 'TT Norms Pro', sans-serif; /* Usando a font pedida com fallback elegante */
+            background-color: var(--bg-color);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Efeitos Neon e Bordas */
+        .neon-border-purple {
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 10px rgba(112, 0, 255, 0.2), inset 0 0 10px rgba(112, 0, 255, 0.1);
+        }
+
+        .neon-bg-green {
+            background-color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(0, 255, 85, 0.3);
+        }
+
+        /* Fita (Ribbon) Diagonal no botão PRO */
+        .ribbon {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: #000;
+            color: #fff;
+            padding: 4px 35px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* --- Animações --- */
+        
+        /* 1. Fundo roxo pulsante (Ambient Glow) */
+        .bg-glow {
+            position: absolute;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(112,0,255,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            animation: pulse-glow 6s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: translate(-50%, 0) scale(1); opacity: 0.5; }
+            100% { transform: translate(-50%, 20px) scale(1.2); opacity: 1; }
+        }
+
+        /* 2. Entrada dos Elementos (Slide up Fade In) */
+        .slide-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.5s; }
+
+        @keyframes slideUpAnim {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Efeitos ao passar o mouse */
+        .hover-scale {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(112, 0, 255, 0.3);
+        }
+        .hover-scale-green:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 255, 85, 0.4);
+            background-color: #00e64d;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 relative">
+
+    <!-- Efeito de Luz Moderna no Fundo -->
+    <div class="bg-glow"></div>
+
+    <!-- Container Principal (Limite de largura para manter elegância no Desktop) -->
+    <main class="w-full max-w-[450px] relative z-10 flex flex-col items-center">
+        
+        <!-- Logo Point Punch -->
+        <div class="w-full flex justify-center mb-6 slide-up">
+            <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" 
+                 alt="Point Punch Logo" 
+                 class="w-64 sm:w-80 object-contain drop-shadow-[0_0_20px_rgba(112,0,255,0.4)]">
+        </div>
+
+        <!-- Título -->
+        <h1 class="text-2xl sm:text-3xl font-normal tracking-[0.15em] uppercase mb-10 text-white slide-up delay-1">
+            Seja Bem Vindo
+        </h1>
+
+        <!-- Bloco de Botões Principais -->
+        <!-- O fundo possui um card invisível super sutil para dar contraste conforme imagem -->
+        <div class="w-full bg-[#0a0515]/60 backdrop-blur-sm border border-purple-900/30 p-5 rounded-2xl mb-8 slide-up delay-2">
+            
+            <!-- Botão VERSÃO BETA -->
+            <a href="https://sitebadbet.github.io/meusite" class="block w-full neon-border-purple rounded-xl p-4 mb-4 text-center cursor-pointer hover-scale relative overflow-hidden group">
+                <div class="absolute inset-0 bg-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <h2 class="text-white font-bold text-sm sm:text-base tracking-widest uppercase mb-1">
+                    Acessar Versão Beta
+                </h2>
+                <p class="text-gray-400 text-xs sm:text-sm font-medium">
+                    100% Grátis para treino
+                </p>
+            </a>
+
+            <!-- Botão VERSÃO PRO -->
+            <a href="pro.html" class="block w-full neon-bg-green rounded-xl p-4 text-center cursor-pointer hover-scale-green relative overflow-hidden group">
+                <!-- Fita Diagonal -->
+                <div class="ribbon">Jurado Pro</div>
+                
+                <h2 class="text-black font-bold text-sm sm:text-base tracking-widest uppercase mb-1 pr-4">
+                    Adquirir Versão Pro
+                </h2>
+                <p class="text-black/80 text-xs sm:text-[13px] font-semibold leading-tight pr-4">
+                    Garante sua batalha tenho estatística completa dos mcs
+                </p>
+            </a>
+        </div>
+
+        <!-- Bloco de Botões Inferiores (3 Colunas) -->
+        <div class="w-full grid grid-cols-3 gap-3 sm:gap-4 slide-up delay-3">
+            
+            <!-- Botão 1 -->
+            <a href="rank.html" class="neon-border-purple rounded-xl flex flex-col items-center justify-center p-3 h-24 sm:h-28 cursor-pointer hover-scale relative overflow-hidden group bg-[#0a0515]/50">
+                <div class="absolute inset-0 bg-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="text-white font-semibold text-xs sm:text-sm uppercase tracking-wider mb-1">Ranking</span>
+                <span class="text-white font-light text-xs sm:text-sm">MCs</span>
+            </a>
+
+            <!-- Botão 2 -->
+            <a href="batalhas.html" class="neon-border-purple rounded-xl flex flex-col items-center justify-center p-3 h-24 sm:h-28 cursor-pointer hover-scale relative overflow-hidden group bg-[#0a0515]/50">
+                <div class="absolute inset-0 bg-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="text-white font-semibold text-xs sm:text-sm uppercase tracking-wider mb-1 text-center">Batalhas</span>
+                <span class="text-white font-light text-xs sm:text-sm text-center">registro</span>
+            </a>
+
+            <!-- Botão 3 -->
+            <a href="liga.html" class="neon-border-purple rounded-xl flex flex-col items-center justify-center p-3 h-24 sm:h-28 cursor-pointer hover-scale relative overflow-hidden group bg-[#0a0515]/50">
+                <div class="absolute inset-0 bg-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="text-white font-semibold text-xs sm:text-sm uppercase tracking-wider mb-1">Liga</span>
+                <span class="text-white font-light text-xs sm:text-sm text-center">point punch</span>
+            </a>
+
+        </div>
+    </main>
+
+</body>
+</html>
+

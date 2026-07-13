@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bad Hip Hop - Batalha de MCs</title>
+    <!-- Tailwind CSS para estilização rápida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #000000;
+            --purple: #6a0dad;
+            --purple-neon: #a020f0;
+            --green-neon: #adff2f;
+            --blue-neon: #3366ff;
+            --orange-neon: #ff6600;
+            --red-neon: #ff3333;
+            --text-light: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none; /* Evita seleção de texto ao clicar rápido */
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            position: relative;
+            background-color: var(--bg-color);
+            box-shadow: 0 0 20px rgba(160, 32, 240, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Transições de Tela */
+        .screen {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: fadeIn 0.4s ease-in-out;
+            overflow-y: auto;
+        }
+        .screen.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Componentes Comuns */
+        .logo-img { max-width: 180px; margin: 20px auto; display: block; }
+        .logo-small { max-width: 120px; margin: 10px auto; }
+        
+        .btn-menu {
+            border: 3px solid var(--purple);
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+        .btn-menu:active { transform: scale(0.95); }
+        
+        .btn-comeca {
+            border: 3px solid #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--green-neon);
+            border-radius: 15px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+        .btn-comeca:active { transform: scale(0.95); border-color: var(--green-neon); }
+
+        .btn-instrucoes {
+            border: 2px solid var(--green-neon);
+            padding: 10px 30px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--purple-neon);
+            border-radius: 10px;
+            margin: auto auto 20px auto;
+            display: inline-block;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .header-title {
+            border: 3px solid var(--purple);
+            padding: 10px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            margin-top: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            text-align: center;
+            color: gray;
+            text-decoration: underline;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        /* Cadastro */
+        .mc-item {
+            border: 2px solid var(--green-neon);
+            padding: 10px;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-delete { color: var(--red-neon); padding: 5px; cursor: pointer; touch-action: manipulation; }
+
+        /* Configuração */
+        .config-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        .config-btn-label {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 150px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .config-val { font-size: 1.5rem; width: 40px; text-align: center; }
+        .btn-plus-min { font-size: 1.5rem; cursor: pointer; width: 30px; text-align: center; touch-action: manipulation;}
+        
+        .bg-regular { background-color: var(--blue-neon); }
+        .bg-punch { background-color: var(--purple-neon); }
+        .bg-fatality { background-color: var(--orange-neon); }
+        .bg-punicao { background-color: var(--red-neon); }
+
+        /* Setup Battle */
+        .vs-container { display: flex; justify-content: center; align-items: center; gap: 15px; margin: 30px 0; }
+        .mc-select-box {
+            width: 100px; height: 100px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 40px; font-weight: bold; cursor: pointer; text-align: center; line-height: 1.1;
+            touch-action: manipulation;
+        }
+        .mc-select-box.blue { background-color: var(--blue-neon); }
+        .mc-select-box.orange { background-color: var(--orange-neon); }
+        .mc-name-selected { font-size: 1.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 90%; }
+
+        .rounds-config { display: flex; justify-content: center; align-items: center; gap: 20px; font-size: 2rem; margin-bottom: 30px;}
+        .rounds-box { border: 4px solid var(--purple-neon); padding: 10px 30px; border-radius: 10px; }
+
+        /* Battle Area */
+        .battle-score-container { display: flex; justify-content: center; align-items: stretch; gap: 10px; margin-bottom: 30px; }
+        .mc-score-card {
+            flex: 1; border: 3px solid transparent; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; overflow: hidden;
+            touch-action: manipulation;
+        }
+        .mc-score-card.active { border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+        .mc-score-card h3 { 
+            font-size: 1.5rem; margin-bottom: 5px; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+        }
+        .score-display { font-size: 4rem; font-weight: bold; padding: 10px 0; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+
+        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 10px; }
+        .action-btn {
+            padding: 20px 10px; border-radius: 10px; font-weight: bold; font-size: 1.1rem;
+            text-align: center; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            touch-action: manipulation;
+        }
+        .action-btn:active { transform: scale(0.95); opacity: 0.8; }
+        .dot { width: 15px; height: 15px; border-radius: 50%; background: rgba(0,0,0,0.3); }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 50;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: #111; border: 2px solid var(--purple-neon); border-radius: 10px;
+            width: 90%; max-width: 350px; padding: 20px; max-height: 80vh; overflow-y: auto;
+        }
+        
+        .mc-list-item {
+            padding: 15px; border-bottom: 1px solid #333; font-size: 1.2rem; cursor: pointer; text-align: center;
+            touch-action: manipulation;
+        }
+        .mc-list-item:hover { background: #222; }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+
+    <!-- SCREEN: MENU PRINCIPAL -->
+    <div id="screen-menu" class="screen active">
+        <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" alt="Point Punch Logo" class="logo-img">
+        
+        <div class="mt-8 flex flex-col gap-4">
+            <div class="btn-menu" onclick="nav('screen-cadastro')">CADASTRO DE MC</div>
+            <div class="btn-menu" onclick="nav('screen-config')">CONFIGURAÇÃO</div>
+        </div>
+
+        <div class="btn-comeca mt-12" onclick="nav('screen-setup')">COMEÇA!</div>
+        
+        <div class="btn-instrucoes mt-auto" onclick="nav('screen-instructions')">Instruções</div>
+    </div>
+
+    <!-- SCREEN: CADASTRO DE MC -->
+    <div id="screen-cadastro" class="screen">
+        <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" alt="Logo" class="logo-small">
+        <div class="header-title">CADASTRO DE MC</div>
+        
+        <div class="text-3xl mb-6 cursor-pointer flex items-center gap-4 touch-manipulation" onclick="addMc()">
+            novo <i class="fas fa-plus text-white font-bold"></i>
+        </div>
+        <div class="text-2xl mb-4">MC</div>
+        
+        <div id="mc-list-container" class="flex flex-col gap-2 flex-grow overflow-y-auto">
+            <!-- Renderizado via JS -->
+        </div>
+
+        <div class="btn-back" onclick="nav('screen-menu')">Voltar ao Menu</div>
+    </div>
+
+    <!-- SCREEN: CONFIGURAÇÃO -->
+    <div id="screen-config" class="screen">
+        <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" alt="Logo" class="logo-small">
+        <div class="header-title text-purple-600 border-purple-600">CONFIGURAÇÃO</div>
+        <p class="text-center text-green-500 mb-6 text-sm">Personalizar a pontuação do seus botões</p>
+
+        <div id="config-container" class="flex-grow flex flex-col justify-center">
+            <!-- Render via JS -->
+        </div>
+
+        <div class="btn-back" onclick="nav('screen-menu')">Voltar ao Menu</div>
+    </div>
+
+    <!-- SCREEN: INSTRUÇÕES -->
+    <div id="screen-instructions" class="screen">
+        <div class="header-title mt-4">INSTRUÇÕES</div>
+        <div class="bg-gray-900 p-6 rounded-lg text-sm leading-relaxed flex-grow">
+            <p class="mb-4"><strong>Bem-vindo ao Bad Hip Hop Batalhas!</strong></p>
+            <p class="mb-2">1. Acesse 'Cadastro de MC' para adicionar os competidores que irão batalhar.</p>
+            <p class="mb-2">2. Vá em 'Começa!', selecione os dois MCs e a quantidade de rounds.</p>
+            <p class="mb-2">3. Na tela de batalha, clique no nome/pontuação do MC que está rimando para selecioná-lo (a borda ficará branca).</p>
+            <p class="mb-4">4. Marque o impacto da rima com os botões:</p>
+            <ul class="mb-4 space-y-2">
+                <li><span class="inline-block w-3 h-3 rounded-full bg-blue-500 mr-2"></span> <strong>REGULAR:</strong> Rima comum.</li>
+                <li><span class="inline-block w-3 h-3 rounded-full bg-purple-500 mr-2"></span> <strong>PUNCH:</strong> Boa resposta/ataque.</li>
+                <li><span class="inline-block w-3 h-3 rounded-full bg-orange-500 mr-2"></span> <strong>FATALITY:</strong> Fechamento perfeito/ko.</li>
+                <li><span class="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span> <strong>PUNIÇÃO:</strong> Rima reciclada/erro.</li>
+            </ul>
+            <p>5. Clique em RESULTADO ao fim do round. O app informará o vencedor no final da batalha e você poderá baixar o resultado!</p>
+        </div>
+        <div class="btn-back" onclick="nav('screen-menu')">Voltar ao Menu</div>
+    </div>
+
+    <!-- SCREEN: SETUP DA BATALHA -->
+    <div id="screen-setup" class="screen">
+        <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" alt="Logo" class="logo-small">
+        <h2 class="text-center text-green-500 text-xl font-bold mt-4 mb-6">Seleção de Mcs</h2>
+
+        <div class="vs-container">
+            <div id="box-mc1" class="mc-select-box blue" onclick="openMcSelect(1)">+</div>
+            <div class="text-4xl font-light">VS</div>
+            <div id="box-mc2" class="mc-select-box orange" onclick="openMcSelect(2)">+</div>
+        </div>
+
+        <div class="text-center text-lg mt-6 mb-2">Quantos Rounds ?</div>
+        <div class="rounds-config">
+            <i class="fas fa-cog cursor-pointer touch-manipulation" onclick="changeRounds()"></i>
+            <div id="setup-rounds-display" class="rounds-box">3</div>
+        </div>
+
+        <div class="btn-comeca !text-orange-500 !border-green-500 mt-auto" onclick="startBattle()">começa</div>
+        <div class="btn-back" onclick="nav('screen-menu')">Cancelar</div>
+    </div>
+
+    <!-- SCREEN: TELA DE BATALHA -->
+    <div id="screen-battle" class="screen">
+        <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" alt="Logo" class="logo-small" style="max-width: 80px;">
+        <h2 id="battle-round-title" class="text-center text-green-500 text-2xl mb-4">1º ROUND</h2>
+
+        <div class="battle-score-container">
+            <div id="card-mc1" class="mc-score-card active" onclick="setActiveMc(1)">
+                <h3 id="battle-name-mc1">MC1</h3>
+                <div id="battle-score-mc1" class="score-display bg-regular">0</div>
+            </div>
+            <div class="flex items-center text-3xl text-green-500 font-bold">X</div>
+            <div id="card-mc2" class="mc-score-card" onclick="setActiveMc(2)">
+                <h3 id="battle-name-mc2">MC2</h3>
+                <div id="battle-score-mc2" class="score-display bg-fatality">0</div>
+            </div>
+        </div>
+
+        <div class="action-buttons mt-auto mb-4">
+            <div class="action-btn bg-regular" onclick="addScore('regular')">
+                REGULAR <span class="dot"></span>
+            </div>
+            <div class="action-btn bg-punch" onclick="addScore('punch')">
+                PUNCH <span class="dot"></span>
+            </div>
+            <div class="action-btn bg-fatality" onclick="addScore('fatality')">
+                FATALITY <span class="dot"></span>
+            </div>
+            <div class="action-btn bg-punicao" onclick="addScore('punicao')">
+                PUNIÇÃO <span class="dot"></span>
+            </div>
+        </div>
+
+        <div class="border-2 border-blue-500 text-center py-3 text-xl font-bold cursor-pointer hover:bg-blue-900 transition mb-2 touch-manipulation" onclick="finishRound()">
+            RESULTADO
+        </div>
+    </div>
+
+    <!-- SCREEN: RESULTADO DO ROUND -->
+    <div id="screen-round-result" class="screen text-center justify-center">
+        <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" alt="Logo" class="logo-small">
+        
+        <div id="round-status-header" class="border-4 border-blue-500 py-2 text-4xl font-bold mt-4 uppercase">VITÓRIA</div>
+        
+        <div id="round-winner-name" class="text-8xl mt-6 overflow-hidden text-ellipsis whitespace-nowrap">GL</div>
+        
+        <div class="text-orange-500 text-xl mt-4">Points</div>
+        <div id="round-winner-score" class="text-6xl bg-blue-500 inline-block px-6 py-2 mt-2 rounded">23</div>
+
+        <div id="btn-next-round" class="border-2 border-white rounded-xl py-4 px-6 text-green-500 text-2xl font-bold mt-12 cursor-pointer mx-auto max-w-[250px] touch-manipulation" onclick="nextRoundLogic()">
+            PRÓXIMO ROUND
+        </div>
+    </div>
+
+    <!-- SCREEN: FINAL VENCEDOR -->
+    <div id="screen-final" class="screen text-center flex-col items-center pt-10">
+        <i class="fas fa-crown text-6xl text-yellow-500 mb-4 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)]"></i>
+        <div class="text-4xl mb-4">Vencedor</div>
+        
+        <div class="border-2 border-purple-600 w-full py-10 my-4 flex justify-center items-center overflow-hidden px-4">
+            <h1 id="final-winner-name" class="text-6xl sm:text-8xl font-bold truncate">GL</h1>
+        </div>
+
+        <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" alt="Logo" class="logo-img mt-8 mb-auto">
+
+        <div class="flex gap-4 w-full mt-auto mb-4">
+            <div class="border-4 border-red-800 p-3 flex-1 text-xl font-bold cursor-pointer touch-manipulation" onclick="showStats()">Resultado</div>
+            <!-- ALTERADO PARA BAIXAR O BLOCO DE NOTAS (TXT) -->
+            <div class="border-4 border-purple-800 p-3 flex-1 text-xl font-bold cursor-pointer touch-manipulation" onclick="generateTXT()">Baixar TXT</div>
+        </div>
+        <div class="text-gray-500 text-sm mb-4 cursor-pointer underline touch-manipulation" onclick="resetApp()">Nova Batalha</div>
+    </div>
+
+    <!-- MODAL SELECIONAR MC -->
+    <div id="modal-select-mc" class="modal-overlay">
+        <div class="modal-content relative flex flex-col">
+            <h3 class="text-xl text-center text-green-500 mb-4 border-b border-gray-700 pb-2">Selecione o MC</h3>
+            <div id="modal-mc-list" class="flex-grow overflow-y-auto"></div>
+            <button class="mt-4 p-2 bg-gray-800 rounded text-white touch-manipulation" onclick="closeModals()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- MODAL ESTATÍSTICAS (RANK/RESULTADOS) -->
+    <div id="modal-stats" class="modal-overlay">
+        <div class="modal-content text-center">
+            <h3 class="text-2xl text-purple-500 font-bold mb-4">Estatísticas da Batalha</h3>
+            <div class="flex justify-between border-b border-gray-600 pb-2 mb-4">
+                <div id="stat-name-1" class="font-bold text-xl text-blue-400 overflow-hidden text-ellipsis whitespace-nowrap w-2/5">MC 1</div>
+                <div class="text-gray-500 w-1/5">VS</div>
+                <div id="stat-name-2" class="font-bold text-xl text-orange-400 overflow-hidden text-ellipsis whitespace-nowrap w-2/5">MC 2</div>
+            </div>
+            
+            <div class="flex justify-between items-center mb-2">
+                <span id="stat-reg-1" class="text-lg w-8 text-left">0</span>
+                <span class="text-sm bg-blue-600 px-2 rounded w-24 text-center">Regular</span>
+                <span id="stat-reg-2" class="text-lg w-8 text-right">0</span>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+                <span id="stat-pun-1" class="text-lg w-8 text-left">0</span>
+                <span class="text-sm bg-purple-600 px-2 rounded w-24 text-center">Punch</span>
+                <span id="stat-pun-2" class="text-lg w-8 text-right">0</span>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+                <span id="stat-fat-1" class="text-lg w-8 text-left">0</span>
+                <span class="text-sm bg-orange-600 px-2 rounded w-24 text-center">Fatality</span>
+                <span id="stat-fat-2" class="text-lg w-8 text-right">0</span>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+                <span id="stat-pnc-1" class="text-lg w-8 text-left">0</span>
+                <span class="text-sm bg-red-600 px-2 rounded w-24 text-center">Punição</span>
+                <span id="stat-pnc-2" class="text-lg w-8 text-right">0</span>
+            </div>
+            
+            <div class="flex justify-between border-t border-gray-600 pt-4 mt-2">
+                <div class="font-bold text-2xl text-blue-400 w-1/3 text-left" id="stat-total-1">0</div>
+                <div class="text-sm mt-1 w-1/3">Total Pts</div>
+                <div class="font-bold text-2xl text-orange-400 w-1/3 text-right" id="stat-total-2">0</div>
+            </div>
+
+            <button class="mt-6 p-2 w-full bg-purple-700 rounded text-white font-bold touch-manipulation" onclick="closeModals()">Fechar</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- SEGURANÇA NA LEITURA DO LOCALSTORAGE ---
+    let storedMcs = [];
+    try {
+        let parsedMcs = JSON.parse(localStorage.getItem('bhh_mcs'));
+        if (Array.isArray(parsedMcs)) storedMcs = parsedMcs;
+    } catch(e) {}
+
+    let storedConfig = { regular: 1, punch: 3, fatality: 5, punicao: -1 };
+    try {
+        let parsedCfg = JSON.parse(localStorage.getItem('bhh_config'));
+        if (parsedCfg && typeof parsedCfg === 'object') {
+            storedConfig = { ...storedConfig, ...parsedCfg };
+        }
+    } catch(e) {}
+
+    // --- ESTADO DO APLICATIVO ---
+    let appState = {
+        mcs: storedMcs,
+        config: storedConfig,
+        battle: {
+            mc1: { name: null, roundScore: 0, totalScore: 0, stats: { regular:0, punch:0, fatality:0, punicao:0 } },
+            mc2: { name: null, roundScore: 0, totalScore: 0, stats: { regular:0, punch:0, fatality:0, punicao:0 } },
+            totalRounds: 3,
+            currentRound: 1,
+            activeSlot: 1 // 1 ou 2
+        },
+        selectingFor: null // Variável temporária para o modal de seleção
+    };
+
+    const pointsNames = [
+        { id: 'regular', name: 'REGULAR', class: 'bg-regular', default: 1 },
+        { id: 'punch', name: 'PUNCH', class: 'bg-punch', default: 3 },
+        { id: 'fatality', name: 'FATALITY', class: 'bg-fatality', default: 5 },
+        { id: 'punicao', name: 'PUNIÇÃO', class: 'bg-punicao', default: -1 }
+    ];
+
+    // --- NAVEGAÇÃO ---
+    function nav(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        
+        if(screenId === 'screen-cadastro') renderMcList();
+        if(screenId === 'screen-config') renderConfigList();
+    }
+
+    // --- CADASTRO DE MC ---
+    function addMc() {
+        const name = prompt("Digite o nome do MC:");
+        if (name && name.trim() !== "") {
+            const upperName = name.trim().toUpperCase();
+            // Comparação segura garantindo que tudo é maiúsculo
+            if(!appState.mcs.map(m => m.toUpperCase()).includes(upperName)){
+                appState.mcs.push(upperName);
+                saveMcs();
+                renderMcList();
+            } else {
+                alert("MC já cadastrado!");
+            }
+        }
+    }
+
+    function removeMc(index) {
+        if(confirm("Deseja remover este MC?")) {
+            appState.mcs.splice(index, 1);
+            saveMcs();
+            renderMcList();
+        }
+    }
+
+    function renderMcList() {
+        const container = document.getElementById('mc-list-container');
+        container.innerHTML = '';
+        appState.mcs.forEach((mc, i) => {
+            container.innerHTML += `
+                <div class="mc-item">
+                    <span class="truncate">${mc}</span>
+                    <i class="fas fa-trash btn-delete" onclick="removeMc(${i})"></i>
+                </div>
+            `;
+        });
+    }
+
+    function saveMcs() {
+        localStorage.setItem('bhh_mcs', JSON.stringify(appState.mcs));
+    }
+
+    // --- CONFIGURAÇÃO ---
+    function renderConfigList() {
+        const container = document.getElementById('config-container');
+        container.innerHTML = '';
+        
+        pointsNames.forEach(pt => {
+            const val = appState.config[pt.id];
+            const sign = val > 0 ? '+' : '';
+            container.innerHTML += `
+                <div class="text-center text-2xl mb-1">${sign}${val}</div>
+                <div class="config-row">
+                    <div class="btn-plus-min" onclick="changeConfig('${pt.id}', -1)">-</div>
+                    <div class="config-btn-label ${pt.class}">
+                        ${pt.name} <span class="dot"></span>
+                    </div>
+                    <div class="btn-plus-min" onclick="changeConfig('${pt.id}', 1)">+</div>
+                </div>
+            `;
+        });
+    }
+
+    function changeConfig(id, amount) {
+        appState.config[id] += amount;
+        localStorage.setItem('bhh_config', JSON.stringify(appState.config));
+        renderConfigList();
+    }
+
+    // --- SETUP DA BATALHA ---
+    function changeRounds() {
+        let r = prompt("Quantos rounds?", appState.battle.totalRounds);
+        r = parseInt(r);
+        if(!isNaN(r) && r > 0) {
+            appState.battle.totalRounds = r;
+            document.getElementById('setup-rounds-display').innerText = r;
+        }
+    }
+
+    function openMcSelect(slot) {
+        if (appState.mcs.length === 0) {
+            alert("Cadastre MCs primeiro!");
+            return;
+        }
+        appState.selectingFor = slot;
+        const list = document.getElementById('modal-mc-list');
+        list.innerHTML = '';
+        appState.mcs.forEach(mc => {
+            list.innerHTML += `<div class="mc-list-item" onclick="selectMcForBattle('${mc}')">${mc}</div>`;
+        });
+        document.getElementById('modal-select-mc').classList.add('active');
+    }
+
+    function selectMcForBattle(mcName) {
+        const slot = appState.selectingFor;
+        // Impedir escolher o mesmo MC pros dois lados
+        if (slot === 1 && appState.battle.mc2.name === mcName) return alert("Esse MC já está do outro lado!");
+        if (slot === 2 && appState.battle.mc1.name === mcName) return alert("Esse MC já está do outro lado!");
+
+        appState.battle[`mc${slot}`].name = mcName;
+        const box = document.getElementById(`box-mc${slot}`);
+        box.innerHTML = `<span class="mc-name-selected">${mcName}</span>`;
+        closeModals();
+    }
+
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    }
+
+    function startBattle() {
+        if (!appState.battle.mc1.name || !appState.battle.mc2.name) {
+            alert("Selecione os dois MCs para começar!");
+            return;
+        }
+        
+        // Reset scores
+        appState.battle.currentRound = 1;
+        [1, 2].forEach(i => {
+            appState.battle[`mc${i}`].roundScore = 0;
+            appState.battle[`mc${i}`].totalScore = 0;
+            appState.battle[`mc${i}`].stats = { regular:0, punch:0, fatality:0, punicao:0 };
+        });
+        
+        updateBattleUI();
+        nav('screen-battle');
+    }
+
+    // --- TELA DE BATALHA ---
+    function updateBattleUI() {
+        document.getElementById('battle-round-title').innerText = `${appState.battle.currentRound}º ROUND`;
+        document.getElementById('battle-name-mc1').innerText = appState.battle.mc1.name;
+        document.getElementById('battle-name-mc2').innerText = appState.battle.mc2.name;
+        document.getElementById('battle-score-mc1').innerText = appState.battle.mc1.roundScore;
+        document.getElementById('battle-score-mc2').innerText = appState.battle.mc2.roundScore;
+        setActiveMc(appState.battle.activeSlot);
+    }
+
+    function setActiveMc(slot) {
+        appState.battle.activeSlot = slot;
+        document.getElementById('card-mc1').classList.remove('active');
+        document.getElementById('card-mc2').classList.remove('active');
+        document.getElementById(`card-mc${slot}`).classList.add('active');
+    }
+
+    function addScore(type) {
+        const mcKey = `mc${appState.battle.activeSlot}`;
+        const points = appState.config[type];
+        
+        appState.battle[mcKey].roundScore += points;
+        appState.battle[mcKey].stats[type]++; // Incrementa estatística
+        
+        document.getElementById(`battle-score-${mcKey}`).innerText = appState.battle[mcKey].roundScore;
+        
+        // Efeito visual rápido
+        const card = document.getElementById(`card-mc${appState.battle.activeSlot}`);
+        card.style.transform = 'scale(1.05)';
+        setTimeout(() => card.style.transform = 'scale(1)', 150);
+    }
+
+    // --- RESULTADO DO ROUND ---
+    function finishRound() {
+        // Salva score total
+        appState.battle.mc1.totalScore += appState.battle.mc1.roundScore;
+        appState.battle.mc2.totalScore += appState.battle.mc2.roundScore;
+
+        const s1 = appState.battle.mc1.roundScore;
+        const s2 = appState.battle.mc2.roundScore;
+
+        const header = document.getElementById('round-status-header');
+        const winnerName = document.getElementById('round-winner-name');
+        const winnerScore = document.getElementById('round-winner-score');
+        const boxScore = document.getElementById('round-winner-score');
+
+        if (s1 > s2) {
+            header.innerText = "VITÓRIA";
+            winnerName.innerText = appState.battle.mc1.name;
+            winnerScore.innerText = s1;
+            boxScore.className = "text-6xl inline-block px-6 py-2 mt-2 rounded bg-blue-500";
+        } else if (s2 > s1) {
+            header.innerText = "VITÓRIA";
+            winnerName.innerText = appState.battle.mc2.name;
+            winnerScore.innerText = s2;
+            boxScore.className = "text-6xl inline-block px-6 py-2 mt-2 rounded bg-orange-500";
+        } else {
+            header.innerText = "EMPATE";
+            winnerName.innerText = "AMBOS";
+            winnerScore.innerText = s1;
+            boxScore.className = "text-6xl inline-block px-6 py-2 mt-2 rounded bg-gray-500";
+        }
+
+        // Verifica se foi o 2º round de uma batalha de 3 rounds para fazer a pergunta do 3º round
+        if (appState.battle.currentRound === 2 && appState.battle.totalRounds >= 3) {
+            document.getElementById('btn-next-round').innerText = "IR PARA 3º ROUND?";
+            document.getElementById('btn-next-round').setAttribute('data-ask-third', 'true');
+        } else if (appState.battle.currentRound >= appState.battle.totalRounds) {
+            document.getElementById('btn-next-round').innerText = "VER VENCEDOR FINAL";
+            document.getElementById('btn-next-round').setAttribute('data-ask-third', 'false');
+        } else {
+            document.getElementById('btn-next-round').innerText = "PRÓXIMO ROUND";
+            document.getElementById('btn-next-round').setAttribute('data-ask-third', 'false');
+        }
+
+        nav('screen-round-result');
+    }
+
+    function nextRoundLogic() {
+        const btn = document.getElementById('btn-next-round');
+        
+        if (btn.getAttribute('data-ask-third') === 'true') {
+            if(confirm("Teve terceiro round? (OK para Sim, Cancelar para encerrar a batalha)")) {
+                appState.battle.currentRound++;
+                resetRoundScores();
+                updateBattleUI();
+                nav('screen-battle');
+            } else {
+                finishBattle();
+            }
+        } else if (appState.battle.currentRound >= appState.battle.totalRounds) {
+            finishBattle();
+        } else {
+            appState.battle.currentRound++;
+            resetRoundScores();
+            updateBattleUI();
+            nav('screen-battle');
+        }
+    }
+
+    function resetRoundScores() {
+        appState.battle.mc1.roundScore = 0;
+        appState.battle.mc2.roundScore = 0;
+    }
+
+    // --- FINAL ---
+    function finishBattle() {
+        const t1 = appState.battle.mc1.totalScore;
+        const t2 = appState.battle.mc2.totalScore;
+        const finalName = document.getElementById('final-winner-name');
+
+        if (t1 > t2) {
+            finalName.innerText = appState.battle.mc1.name;
+            finalName.className = "text-6xl sm:text-8xl font-bold truncate text-blue-500";
+        } else if (t2 > t1) {
+            finalName.innerText = appState.battle.mc2.name;
+            finalName.className = "text-6xl sm:text-8xl font-bold truncate text-orange-500";
+        } else {
+            finalName.innerText = "EMPATE";
+            finalName.className = "text-6xl font-bold truncate text-gray-400";
+        }
+
+        nav('screen-final');
+    }
+
+    // --- RESULTADOS DETALHADOS E ESTATÍSTICAS ---
+    function showStats() {
+        const mc1 = appState.battle.mc1;
+        const mc2 = appState.battle.mc2;
+
+        document.getElementById('stat-name-1').innerText = mc1.name;
+        document.getElementById('stat-name-2').innerText = mc2.name;
+
+        document.getElementById('stat-reg-1').innerText = mc1.stats.regular;
+        document.getElementById('stat-reg-2').innerText = mc2.stats.regular;
+        
+        document.getElementById('stat-pun-1').innerText = mc1.stats.punch;
+        document.getElementById('stat-pun-2').innerText = mc2.stats.punch;
+        
+        document.getElementById('stat-fat-1').innerText = mc1.stats.fatality;
+        document.getElementById('stat-fat-2').innerText = mc2.stats.fatality;
+        
+        document.getElementById('stat-pnc-1').innerText = mc1.stats.punicao;
+        document.getElementById('stat-pnc-2').innerText = mc2.stats.punicao;
+
+        document.getElementById('stat-total-1').innerText = mc1.totalScore;
+        document.getElementById('stat-total-2').innerText = mc2.totalScore;
+
+        document.getElementById('modal-stats').classList.add('active');
+    }
+
+    function resetApp() {
+        // Limpa os boxes da seleção
+        document.getElementById('box-mc1').innerHTML = '+';
+        document.getElementById('box-mc2').innerHTML = '+';
+        appState.battle.mc1.name = null;
+        appState.battle.mc2.name = null;
+        nav('screen-menu');
+    }
+
+    // --- GERAÇÃO DE BLOCO DE NOTAS (TXT) ---
+    function generateTXT() {
+        const mc1 = appState.battle.mc1;
+        const mc2 = appState.battle.mc2;
+
+        let winnerText = "EMPATE";
+        if(mc1.totalScore > mc2.totalScore) winnerText = mc1.name;
+        if(mc2.totalScore > mc1.totalScore) winnerText = mc2.name;
+
+        // Montando o texto perfeitamente organizado
+        let content = `======================================\n`;
+        content += ` BAD HIP HOP - RESULTADO DA BATALHA \n`;
+        content += `======================================\n\n`;
+        
+        content += `            ${mc1.name}  X  ${mc2.name}\n\n`;
+        content += `--------------------------------------\n`;
+        content += ` ESTATÍSTICAS DOS ATAQUES:\n`;
+        content += `--------------------------------------\n`;
+        content += ` [Regular]  ${mc1.name}: ${mc1.stats.regular} | ${mc2.name}: ${mc2.stats.regular}\n`;
+        content += ` [Punch]    ${mc1.name}: ${mc1.stats.punch} | ${mc2.name}: ${mc2.stats.punch}\n`;
+        content += ` [Fatality] ${mc1.name}: ${mc1.stats.fatality} | ${mc2.name}: ${mc2.stats.fatality}\n`;
+        content += ` [Punição]  ${mc1.name}: ${mc1.stats.punicao} | ${mc2.name}: ${mc2.stats.punicao}\n`;
+        content += `--------------------------------------\n`;
+        content += ` TOTAL PTS  ${mc1.name}: ${mc1.totalScore} | ${mc2.name}: ${mc2.totalScore}\n`;
+        content += `======================================\n\n`;
+        content += ` >>> VENCEDOR: ${winnerText} <<<\n\n`;
+        content += `======================================\n`;
+        content += ` Gerado pelo app Bad Hip Hop (Point Punch)\n`;
+
+        // Criando o arquivo para baixar
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Resultado_${mc1.name}_vs_${mc2.name}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Limpando
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+</script>
+</body>
+</html>
+
