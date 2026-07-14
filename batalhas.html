@@ -176,11 +176,8 @@
 
             <div class="w-full bg-[#07030e] rounded-2xl border border-purple-900/60 p-5 shadow-2xl relative">
                 
-                <!-- ENVIO DIRETO PARA O SEU E-MAIL COM CONFIGURAÇÃO COMPLETA -->
-                <form action="https://formsubmit.co/wsfbad90@gmail.com" method="POST" class="space-y-5" onsubmit="showLoading(event, this)">
-                    
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_subject" value="NOVO CADASTRO DE BATALHA PRO + DETALHES - Point Punch!">
+                <!-- ENVIO DIRETO PARA O WHATSAPP -->
+                <form id="cadastroForm" class="space-y-5" onsubmit="sendToWhatsApp(event)">
                     
                     <!-- Bloco 1: Informações Básicas -->
                     <div class="space-y-3">
@@ -340,14 +337,74 @@
     </footer>
 
     <script>
-        function showLoading(event, formElement) {
+        function sendToWhatsApp(event) {
+            event.preventDefault(); // Evita que a página recarregue
+
+            const form = event.target;
             const btn = document.getElementById('btn-submit');
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> ENVIANDO...';
+            
+            // Efeito visual de carregamento
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> REDIRECIONANDO...';
             btn.classList.replace('from-purple-800', 'from-gray-600');
             btn.classList.replace('to-indigo-800', 'to-gray-800');
             btn.classList.remove('shadow-[0_0_15px_rgba(147,51,234,0.4)]');
-            btn.style.pointerEvents = 'none'; 
+            btn.style.pointerEvents = 'none';
+
+            // Coleta os dados do formulário
+            const fd = new FormData(form);
+            
+            // Formata a mensagem para o WhatsApp
+            const textoMensagem = `🔥 *NOVO CADASTRO DE BATALHA PRO* 🔥
+            
+*--- Info Geral ---*
+*Nome da Batalha:* ${fd.get('Nome_da_Batalha') || 'Não informado'}
+*Ano de Fundação:* ${fd.get('Ano_Fundacao') || 'Não informado'}
+*Instagram:* ${fd.get('Instagram') || 'Não informado'}
+*Endereço:* ${fd.get('Endereco_Completo') || ''}, ${fd.get('Cidade') || ''} - ${fd.get('Estado') || ''}
+
+*--- Biografia & História ---*
+*História:* ${fd.get('Historia_Biografia') || ''}
+*Maior Campeão:* ${fd.get('Maior_Campeao') || ''}
+
+*--- Galeria e Fotos ---*
+*Logo Principal:* ${fd.get('Link_Logo_Principal') || 'Não informado'}
+*Foto Antiga:* ${fd.get('Link_Foto_Antiga') || ''}
+*Foto Recente:* ${fd.get('Link_Foto_Recente') || ''}
+
+*--- A Tropa (Organização) ---*
+*Presidente:* ${fd.get('Staff_Presidente') || 'Não informado'}
+*Vice-Presidente:* ${fd.get('Staff_Vice') || 'Não informado'}
+*Apresentador:* ${fd.get('Staff_Apresentador') || 'Não informado'}
+*DJ Principal:* ${fd.get('Staff_DJ') || 'Não informado'}
+*Pilagem / Outros:* ${fd.get('Staff_Pilagem') || 'Não informado'}
+*Contato:* ${fd.get('Contato') || ''}
+
+*--- Pagamento ---*
+*Pagamento Confirmado:* ${fd.get('Pagamento_Confirmado') ? 'Sim' : 'Não'}
+*Comprovante / @ de quem pagou:* ${fd.get('Comprovante_QuemPagou') || ''}`;
+
+            // Codifica o texto para ser inserido na URL e define o número do WhatsApp
+            const urlEncodedText = encodeURIComponent(textoMensagem);
+            const numeroWhatsApp = "5521996470174";
+            const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${urlEncodedText}`;
+
+            // Abre o link do WhatsApp em uma nova aba
+            window.open(urlWhatsApp, '_blank');
+
+            // Retorna o botão ao estado normal após alguns segundos
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.replace('from-gray-600', 'from-purple-800');
+                btn.classList.replace('to-gray-800', 'to-indigo-800');
+                btn.classList.add('shadow-[0_0_15px_rgba(147,51,234,0.4)]');
+                btn.style.pointerEvents = 'auto';
+                
+                // Opcional: Limpa o formulário após o envio
+                // form.reset(); 
+            }, 2000);
         }
     </script>
 </body>
 </html>
+
