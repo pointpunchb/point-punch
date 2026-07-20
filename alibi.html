@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Point Punch - Batalha do Álibi</title>
+    <!-- Tailwind CSS para design responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #030008;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .neon-border-purple {
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.4), inset 0 0 10px rgba(147, 51, 234, 0.15);
+        }
+        .neon-border-cyan {
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.4), inset 0 0 10px rgba(34, 211, 238, 0.15);
+        }
+        .neon-border-green {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4), inset 0 0 10px rgba(34, 197, 94, 0.15);
+        }
+        .neon-text-purple {
+            text-shadow: 0 0 8px rgba(147, 51, 234, 0.8);
+        }
+        .neon-text-cyan {
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.8);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0614;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9333ea;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between pb-8">
+
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="max-w-md mx-auto w-full px-4 flex flex-col items-center">
+        
+        <!-- LOGO DO TOPO -->
+        <header class="w-full flex justify-center py-4">
+            <a href="index.html">
+                <img src="https://i.postimg.cc/NfdVK8mt/file-00000000820471f5ab0293f999b43988.png" 
+                     alt="Point Punch Logo" 
+                     class="h-24 object-contain drop-shadow-[0_0_15px_rgba(147,51,234,0.6)]"
+                     onerror="this.src='https://placehold.co/200x100/120024/ffffff?text=POINT+PUNCH'">
+            </a>
+        </header>
+
+        <!-- VOLTAR PARA LISTAGEM / HOME -->
+        <div class="w-full mb-4">
+            <a href="javascript:history.back()" class="inline-flex items-center gap-1.5 text-xs font-bold text-purple-400 hover:text-white uppercase font-orbitron tracking-widest transition-all">
+                <i class="fa-solid fa-chevron-left text-[10px]"></i> Voltar
+            </a>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO: BANNER PRINCIPAL DA BATALHA -->
+        <!-- ========================================== -->
+        <section class="w-full relative rounded-2xl overflow-hidden border-2 border-purple-500 bg-[#07030e] neon-border-purple mb-5">
+            <!-- Imagem de fundo do banner (Foto Recente) -->
+            <div class="h-44 relative overflow-hidden">
+                <img src="https://i.postimg.cc/vBnr4NDr/Whats-App-Image-2026-07-14-at-15-00-09.jpg" 
+                     alt="Capa da Batalha" 
+                     class="w-full h-full object-cover opacity-50">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#07030e] via-[#07030e]/40 to-transparent"></div>
+            </div>
+
+            <!-- Dados Principais -->
+            <div class="p-5 -mt-6 relative z-10 space-y-3">
+                <div class="flex justify-between items-end gap-2">
+                    <div class="flex items-center gap-3">
+                        <!-- LOGO DA BATALHA -->
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-purple-500 bg-black flex-shrink-0 shadow-[0_0_12px_rgba(147,51,234,0.6)]">
+                            <img src="https://i.postimg.cc/nz1vKQK6/Whats-App-Image-2026-07-14-at-14-53-46-2.jpg" 
+                                 alt="Logo Batalha do Álibi" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <!-- NOME DA BATALHA -->
+                            <h1 class="text-2xl font-black font-orbitron tracking-wider text-white uppercase leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] flex items-center gap-1.5">
+                                BATALHA DO ÁLIBI
+                                <i class="fa-solid fa-circle-check text-blue-500 text-sm drop-shadow-[0_0_5px_rgba(59,130,246,0.5)]" title="Verificado PRO"></i>
+                            </h1>
+                            <!-- INSTAGRAM OFICIAL -->
+                            <p class="text-cyan-400 font-bold text-xs mt-1">
+                                <i class="fa-brands fa-instagram mr-1"></i> @batalhadoalibi
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- ANO DE FUNDAÇÃO BADGE -->
+                    <div class="bg-purple-950/90 border border-purple-500/50 rounded px-2.5 py-1 text-right flex-shrink-0">
+                        <span class="text-[7px] text-purple-300 block leading-none uppercase">Fundada em</span>
+                        <span class="text-xs font-black font-orbitron text-white leading-none">2025</span>
+                    </div>
+                </div>
+
+                <!-- ENDEREÇO DA BATALHA -->
+                <div class="bg-black/50 rounded-lg p-2.5 border border-purple-500/20 flex items-center gap-2.5">
+                    <div class="bg-purple-900/40 p-1.5 rounded text-purple-400 flex-shrink-0">
+                        <i class="fa-solid fa-location-dot text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[8px] text-gray-400 uppercase tracking-widest">Onde acontece</p>
+                        <p class="text-[11px] font-bold text-white uppercase leading-tight">Av. Antônio Bueno Capolupo N° 231 Gleba 2, São Vicente - SP</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO: MAIOR CAMPEÃO / DESTAQUE -->
+        <!-- ========================================== -->
+        <section class="w-full mb-5">
+            <div class="w-full bg-[#05110a] rounded-xl border border-green-500/30 p-3.5 neon-border-green flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="bg-green-950/60 p-2.5 rounded-lg border border-green-500/20 text-green-400 flex items-center justify-center">
+                        <i class="fa-solid fa-crown text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="text-[8px] text-green-400 uppercase tracking-widest font-bold block">Maior Campeão</span>
+                        <span class="text-base font-black font-orbitron text-white uppercase leading-none tracking-wide">@emici.lucas</span>
+                    </div>
+                </div>
+                <div class="bg-green-900/30 text-green-400 text-[9px] font-bold px-2 py-1 rounded border border-green-500/20 uppercase font-orbitron">
+                    Lenda
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO: BIOGRAFIA / HISTÓRIA -->
+        <!-- ========================================== -->
+        <section class="w-full space-y-3 mb-5">
+            <div class="w-full bg-[#0a0512] rounded-xl border border-purple-900/60 p-4 shadow-xl">
+                <h3 class="text-xs font-bold font-orbitron tracking-widest text-purple-300 uppercase mb-2 border-b border-purple-950 pb-1">
+                    <i class="fa-solid fa-book-open mr-1"></i> A História
+                </h3>
+                <div class="text-[11px] text-gray-300 leading-relaxed font-medium space-y-2">
+                    <p>
+                        A Batalha do Álibi nasceu em São Vicente, na Gleba 2, com o propósito de fortalecer a cultura Hip-Hop e criar um espaço seguro para que jovens e artistas da Baixada Santista pudessem se expressar por meio da improvisação. Mais do que uma competição de rimas, o projeto se tornou um ponto de encontro da comunidade, promovendo cultura, respeito, inclusão e oportunidades para novos talentos.
+                    </p>
+                    <p>
+                        Desde a sua primeira edição, a Batalha do Álibi vem crescendo a cada temporada, reunindo MCs de diversas cidades, fortalecendo a cena regional e incentivando o desenvolvimento artístico e pessoal dos participantes. Com o lema "Cultura • Resistência • Oportunidade", o projeto se consolidou como um movimento independente que valoriza a arte de rua, aproxima a comunidade e mostra que o verdadeiro protagonismo está na força da palavra.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO: GALERIA DE FOTOS (ANTIGA x RECENTE) -->
+        <!-- ========================================== -->
+        <section class="w-full mb-5">
+            <div class="w-full bg-[#0a0512] rounded-xl border border-purple-900/60 p-4 shadow-xl">
+                <h3 class="text-xs font-bold font-orbitron tracking-widest text-purple-300 uppercase mb-3 border-b border-purple-950 pb-1">
+                    <i class="fa-solid fa-images mr-1"></i> Registro Visual
+                </h3>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Foto Antiga -->
+                    <div class="space-y-1">
+                        <span class="text-[8px] text-gray-400 uppercase tracking-widest block font-bold text-center">Início (Foto Antiga)</span>
+                        <div class="relative rounded-lg overflow-hidden border border-purple-900/50 aspect-square">
+                            <img src="https://i.postimg.cc/CxMsc7rs/1361.jpg" 
+                                 alt="Início da Batalha" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    <!-- Foto Recente -->
+                    <div class="space-y-1">
+                        <span class="text-[8px] text-gray-400 uppercase tracking-widest block font-bold text-center">Hoje (Foto Recente)</span>
+                        <div class="relative rounded-lg overflow-hidden border border-purple-900/50 aspect-square">
+                            <img src="https://i.postimg.cc/vBnr4NDr/Whats-App-Image-2026-07-14-at-15-00-09.jpg" 
+                                 alt="Galera Hoje" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO: A TROPA (ORGANIZAÇÃO / CREW) -->
+        <!-- ========================================== -->
+        <section class="w-full mb-6">
+            <div class="w-full bg-[#07030e] rounded-xl border border-purple-900/60 p-4 shadow-xl">
+                <h3 class="text-xs font-bold font-orbitron tracking-widest text-purple-300 uppercase mb-3 border-b border-purple-950 pb-1">
+                    <i class="fa-solid fa-users mr-1"></i> A Tropa (Staff)
+                </h3>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <!-- Presidente -->
+                    <div class="bg-black/40 p-2.5 rounded-lg border border-purple-950 flex items-center gap-2">
+                        <div class="text-yellow-500 text-xs"><i class="fa-solid fa-star"></i></div>
+                        <div>
+                            <span class="text-[7px] text-gray-500 uppercase block leading-none">Presidente</span>
+                            <span class="text-xs font-bold text-white uppercase leading-none">Francielton Melo</span>
+                        </div>
+                    </div>
+
+                    <!-- Vice-Presidente -->
+                    <div class="bg-black/40 p-2.5 rounded-lg border border-purple-950 flex items-center gap-2">
+                        <div class="text-yellow-600/70 text-xs"><i class="fa-solid fa-star-half-stroke"></i></div>
+                        <div>
+                            <span class="text-[7px] text-gray-500 uppercase block leading-none">Vice-Pres.</span>
+                            <span class="text-xs font-bold text-white uppercase leading-none">Thamires Ribeiro</span>
+                        </div>
+                    </div>
+
+                    <!-- Mestre de Cerimônia -->
+                    <div class="bg-black/40 p-2.5 rounded-lg border border-purple-950 flex items-center gap-2">
+                        <div class="text-purple-400 text-xs"><i class="fa-solid fa-microphone"></i></div>
+                        <div>
+                            <span class="text-[7px] text-gray-500 uppercase block leading-none">Apresentador</span>
+                            <span class="text-xs font-bold text-white uppercase leading-none">Francielton</span>
+                        </div>
+                    </div>
+
+                    <!-- DJ Principal -->
+                    <div class="bg-black/40 p-2.5 rounded-lg border border-purple-950 flex items-center gap-2">
+                        <div class="text-cyan-400 text-xs"><i class="fa-solid fa-compact-disc"></i></div>
+                        <div>
+                            <span class="text-[7px] text-gray-500 uppercase block leading-none">DJ Principal</span>
+                            <span class="text-[10px] font-bold text-white uppercase leading-none">Não informado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pilagem -->
+                <div class="mt-2.5 bg-black/40 p-2.5 rounded-lg border border-purple-950">
+                    <span class="text-[7px] text-gray-500 uppercase block leading-none mb-1">Pilagem / Apoio</span>
+                    <p class="text-[10px] text-gray-300 font-bold uppercase tracking-wider">Não informado</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO: REDES SOCIAIS E CONTATO -->
+        <!-- ========================================== -->
+        <section class="w-full space-y-3">
+            <div class="grid grid-cols-2 gap-3 w-full">
+                <!-- INSTAGRAM -->
+                <a href="https://instagram.com/batalhadoalibi" target="_blank" class="flex items-center justify-center gap-2 bg-gradient-to-r from-pink-700 to-rose-700 hover:from-pink-600 hover:to-rose-600 text-white font-black py-3 px-4 rounded-xl text-xs uppercase tracking-widest font-orbitron transition-all duration-300 shadow-[0_0_12px_rgba(225,29,72,0.3)] hover:shadow-[0_0_18px_rgba(225,29,72,0.6)]">
+                    <i class="fa-brands fa-instagram text-base"></i> Instagram
+                </a>
+
+                <!-- WHATSAPP / CONTATO -->
+                <a href="https://wa.me/5513978043683" target="_blank" class="flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-500 hover:to-emerald-600 text-white font-black py-3 px-4 rounded-xl text-xs uppercase tracking-widest font-orbitron transition-all duration-300 shadow-[0_0_12px_rgba(16,185,129,0.3)] hover:shadow-[0_0_18px_rgba(16,185,129,0.6)]">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Contato
+                </a>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="w-full text-center mt-8 text-gray-600 text-[10px] tracking-wider uppercase font-orbitron">
+        Point Punch © 2026 - Perfil de Batalhas PRO
+    </footer>
+
+</body>
+</html>
+
